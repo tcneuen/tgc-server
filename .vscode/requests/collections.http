@@ -1,0 +1,37 @@
+### GET all collections
+GET https://{{host}}:{{$dotenv PORT}}/{{version}}/collections HTTP/1.1
+Content-Type: application/json
+Authorization: token {{$dotenv TOKEN}}
+
+
+### GET collection by id
+GET https://{{host}}:{{$dotenv PORT}}/{{version}}/collections/{{collectionId}} HTTP/1.1
+Content-Type: application/json
+Authorization: token {{$dotenv TOKEN}}
+
+
+### POST create collection
+POST https://{{host}}:{{$dotenv PORT}}/{{version}}/collections HTTP/1.1
+Content-Type: application/json
+Authorization: token {{$dotenv TOKEN}}
+
+{
+    "name": "My Collection"
+}
+
+
+### PATCH update collection
+PATCH https://{{host}}:{{$dotenv PORT}}/{{version}}/collections/{{collectionId}} HTTP/1.1
+Content-Type: application/json
+Authorization: token {{$dotenv TOKEN}}
+
+{
+    "name": "My Renamed Collection",
+    "defaultListId": "{{listId}}"
+}
+
+
+### DELETE collection
+DELETE https://{{host}}:{{$dotenv PORT}}/{{version}}/collections/{{collectionId}} HTTP/1.1
+Content-Type: application/json
+Authorization: token {{$dotenv TOKEN}}

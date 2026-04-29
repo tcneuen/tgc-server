@@ -1,0 +1,53 @@
+### GET lists for a collection
+GET https://{{host}}:{{$dotenv PORT}}/{{version}}/collections/{{collectionId}}/lists HTTP/1.1
+Content-Type: application/json
+Authorization: token {{$dotenv TOKEN}}
+
+
+### POST create list
+POST https://{{host}}:{{$dotenv PORT}}/{{version}}/collections/{{collectionId}}/lists HTTP/1.1
+Content-Type: application/json
+Authorization: token {{$dotenv TOKEN}}
+
+{
+    "name": "S Tier",
+    "backgroundColor": "#FFD700",
+    "startingRating": 90
+}
+
+
+### POST create protected list
+POST https://{{host}}:{{$dotenv PORT}}/{{version}}/collections/{{collectionId}}/lists HTTP/1.1
+Content-Type: application/json
+Authorization: token {{$dotenv TOKEN}}
+
+{
+    "name": "Unrated",
+    "protected": true
+}
+
+
+### PATCH rename list
+PATCH https://{{host}}:{{$dotenv PORT}}/{{version}}/collections/{{collectionId}}/lists/{{listId}} HTTP/1.1
+Content-Type: application/json
+Authorization: token {{$dotenv TOKEN}}
+
+{
+    "name": "A Tier"
+}
+
+
+### PATCH update list color
+PATCH https://{{host}}:{{$dotenv PORT}}/{{version}}/collections/{{collectionId}}/lists/{{listId}} HTTP/1.1
+Content-Type: application/json
+Authorization: token {{$dotenv TOKEN}}
+
+{
+    "backgroundColor": "#FF4500"
+}
+
+
+### DELETE list
+DELETE https://{{host}}:{{$dotenv PORT}}/{{version}}/collections/{{collectionId}}/lists/{{listId}} HTTP/1.1
+Content-Type: application/json
+Authorization: token {{$dotenv TOKEN}}
