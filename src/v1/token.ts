@@ -36,8 +36,6 @@ const authenticateToken: RequestHandler = (req, res, next) => {
   }
 
   jwt.verify(token, TOKEN_SECRET, (err, user) => {
-    console.log(err);
-
     if (err) return res.sendStatus(403);
     if (user === undefined || typeof user !== "object")
       return res.sendStatus(403);

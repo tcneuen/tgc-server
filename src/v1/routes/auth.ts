@@ -12,8 +12,10 @@ router.post(
     next,
   ): Promise<void> => {
     const { email, password } = req.body;
-    if (!email || !password)
+    if (!email || !password) {
       res.status(400).json({ error: "Email or password missing" });
+      return;
+    }
 
     const user = await prisma.user.findUnique({
       where: { email: req.body?.email },

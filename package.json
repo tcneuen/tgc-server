@@ -15,7 +15,9 @@
     "db-reset": "prisma migrate reset",
     "generate": "prisma generate",
     "generate-cert": "openssl genrsa -out dist/key.pem && openssl req -new -key dist/key.pem -out dist/csr.pem && openssl x509 -req -days 9999 -in dist/csr.pem -signkey dist/key.pem -out dist/cert.pem",
-    "create-token": "tsx scripts/create-token.ts"
+    "create-token": "tsx scripts/create-token.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.8.0",
@@ -24,7 +26,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
-    "zod": "^3.23.8",
+    "zod": "^4.3.6",
     "zod-prisma-types": "^3.1.8"
   },
   "devDependencies": {
@@ -35,6 +37,7 @@
     "@types/jsonwebtoken": "^9.0.2",
     "@types/node": "^22.7.8",
     "@types/prettier": "^3",
+    "@types/supertest": "^7.2.0",
     "@typescript-eslint/eslint-plugin": "^8.11.0",
     "@typescript-eslint/parser": "^8.11.0",
     "eslint": "^9.13.0",
@@ -42,8 +45,10 @@
     "nodemon": "^3.0.1",
     "prettier": "^3.0.3",
     "prisma": "^7.8.0",
+    "supertest": "^7.2.2",
     "tsx": "^4.21.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "vitest": "^4.1.5"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

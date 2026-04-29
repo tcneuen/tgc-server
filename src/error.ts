@@ -12,7 +12,6 @@ export function errorHandler(
   res: Response,
   next: NextFunction,
 ): void | Promise<void> {
-  console.log("better error");
   if (err instanceof PrismaClientKnownRequestError) {
     if (err.code === "P2002") {
       res.status(400).json({
