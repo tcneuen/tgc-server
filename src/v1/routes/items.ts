@@ -13,6 +13,13 @@ const CreateItemSchema = z.object({
   afterId: z.number().int().nullable().optional(),
 });
 
+const CreateItemsBatchSchema = z.object({
+  listId: z.string().uuid(),
+  /** Insert the whole batch after this item (null/absent = insert at head of list) */
+  afterId: z.number().int().nullable().optional(),
+  items: z.array(z.object({ name: z.string(), description: z.string() })).min(1),
+});
+
 const UpdateItemSchema = z.object({
   name: z.string().optional(),
   description: z.string().optional(),
@@ -243,6 +250,82 @@ router.post("/", async (req, res, next) => {
     await recalcRatingsForList(listId);
     const updated = await prisma.item.findUniqueOrThrow({ where: { id: item.id } });
     res.status(201).json(updated);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /collections/:collectionId/items/batch — create multiple items at once
+router.post("/batch", async (req, res, next) => {
+  const userId = getUserId(req);
+  if (userId === null) { res.sendStatus(401); return; }
+  const parsed = CreateItemsBatchSchema.safeParse(req.body);
+  if (!parsed.success) { next(parsed.error); return; }
+  try {
+    const { collectionId } = req.params;
+    const collection = await requireCollection(collectionId, userId, res);
+    if (!collection) return;
+
+    const { listId, afterId, items: newItems } = parsed.data;
+
+    // Find the node after which we'll insert (tail of insertion point)
+    let insertAfter: ItemNode | null = null;
+    let insertBefore: ItemNode | null = null;
+
+    if (afterId != null) {
+      insertAfter = await prisma.item.findFirst({ where: { id: afterId, listId } });
+      if (!insertAfter) {
+        res.status(400).json({ error: "afterId item not found in target list" });
+        return;
+      }
+      if (insertAfter.nextId != null) {
+        insertBefore = await prisma.item.findUnique({ where: { id: insertAfter.nextId } });
+      }
+    } else {
+      // Insert at head — current head becomes the node after the batch
+      insertBefore = await prisma.item.findFirst({ where: { listId, prevId: null } });
+    }
+
+    // Create all items in a transaction, chaining them together
+    const created = await prisma.$transaction(async (tx) => {
+      const result: ItemNode[] = [];
+      let prevId: number | null = insertAfter?.id ?? null;
+
+      for (const itemData of newItems) {
+        const item = await tx.item.create({
+          data: {
+            name: itemData.name,
+            description: itemData.description,
+            collectionId,
+            listId,
+            prevId,
+            nextId: null,
+            rating: null,
+          },
+        });
+        if (prevId !== null) {
+          await tx.item.update({ where: { id: prevId }, data: { nextId: item.id } });
+        }
+        result.push(item as ItemNode);
+        prevId = item.id;
+      }
+
+      // Link last created item to whatever was after the insertion point
+      if (insertBefore && prevId !== null) {
+        await tx.item.update({ where: { id: prevId }, data: { nextId: insertBefore.id } });
+        await tx.item.update({ where: { id: insertBefore.id }, data: { prevId } });
+      }
+
+      return result;
+    });
+
+    await recalcRatingsForList(listId);
+
+    // Return fresh items in insertion order
+    const ids = created.map((i) => i.id);
+    const freshItems = await prisma.item.findMany({ where: { id: { in: ids } } });
+    const byId = new Map(freshItems.map((i) => [i.id, i]));
+    res.status(201).json(ids.map((id) => byId.get(id)));
   } catch (err) {
     next(err);
   }
