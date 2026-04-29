@@ -18,9 +18,47 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  username String @unique
-  email    String @unique
-  name     String
-  password String
+  id          Int          @id @default(autoincrement())
+  username    String       @unique
+  email       String       @unique
+  name        String
+  password    String
+  collections Collection[]
+}
+
+model Collection {
+  id            String  @id @default(uuid())
+  name          String
+  /// ID of the list that newly added items are placed into by default
+  defaultListId String?
+  userId        Int
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lists List[]
+  items Item[]
+}
+
+model List {
+  id              String  @id @default(uuid())
+  name            String
+  /// When true the list cannot be deleted or renamed by the user
+  protected       Boolean @default(false)
+  backgroundColor String?
+  startingRating  Float?
+  collectionId    String
+
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  items      Item[]
+}
+
+model Item {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  order       Int
+  collectionId String
+  listId       String
+
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  list       List       @relation(fields: [listId], references: [id], onDelete: Cascade)
 }
