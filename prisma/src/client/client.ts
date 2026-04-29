@@ -46,3 +46,18 @@ export { Prisma }
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Collection
+ * 
+ */
+export type Collection = Prisma.CollectionModel
+/**
+ * Model List
+ * 
+ */
+export type List = Prisma.ListModel
+/**
+ * Model Item
+ * 
+ */
+export type Item = Prisma.ItemModel
