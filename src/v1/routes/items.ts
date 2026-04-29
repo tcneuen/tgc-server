@@ -73,23 +73,28 @@ type ItemNode = { id: number; prevId: number | null; nextId: number | null; [key
 function sortLinkedList<T extends ItemNode>(items: T[]): T[] {
   if (items.length === 0) return [];
   const byId = new Map(items.map((i) => [i.id, i]));
-  // Find the head: item where no other item's nextId points to it, i.e. prevId is null
-  let head = items.find((i) => i.prevId === null);
-  if (!head) {
-    // Fallback: start from any item and walk back to find head
-    head = items[0];
-    while (head.prevId !== null && byId.has(head.prevId)) {
-      head = byId.get(head.prevId)!;
+  const visited = new Set<number>();
+  const result: T[] = [];
+
+  // Walk each chain starting from its head (prevId is null or points outside this set).
+  // This handles orphan items (prevId=null, nextId=null) as single-element chains.
+  const heads = items.filter(
+    (i) => i.prevId === null || !byId.has(i.prevId),
+  );
+  for (const head of heads) {
+    let current: T | undefined = head;
+    while (current && !visited.has(current.id)) {
+      result.push(current);
+      visited.add(current.id);
+      current = current.nextId != null ? byId.get(current.nextId) : undefined;
     }
   }
-  const result: T[] = [];
-  let current: T | undefined = head;
-  const visited = new Set<number>();
-  while (current && !visited.has(current.id)) {
-    result.push(current);
-    visited.add(current.id);
-    current = current.nextId != null ? byId.get(current.nextId) : undefined;
+
+  // Append any remaining items that weren't reachable (broken chains)
+  for (const item of items) {
+    if (!visited.has(item.id)) result.push(item);
   }
+
   return result;
 }
 
