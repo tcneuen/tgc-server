@@ -28,78 +28,98 @@ export type AggregateItem = {
 
 export type ItemAvgAggregateOutputType = {
   id: number | null
-  order: number | null
+  rating: number | null
+  prevId: number | null
+  nextId: number | null
 }
 
 export type ItemSumAggregateOutputType = {
   id: number | null
-  order: number | null
+  rating: number | null
+  prevId: number | null
+  nextId: number | null
 }
 
 export type ItemMinAggregateOutputType = {
   id: number | null
   name: string | null
   description: string | null
-  order: number | null
+  rating: number | null
   collectionId: string | null
   listId: string | null
+  prevId: number | null
+  nextId: number | null
 }
 
 export type ItemMaxAggregateOutputType = {
   id: number | null
   name: string | null
   description: string | null
-  order: number | null
+  rating: number | null
   collectionId: string | null
   listId: string | null
+  prevId: number | null
+  nextId: number | null
 }
 
 export type ItemCountAggregateOutputType = {
   id: number
   name: number
   description: number
-  order: number
+  rating: number
   collectionId: number
   listId: number
+  prevId: number
+  nextId: number
   _all: number
 }
 
 
 export type ItemAvgAggregateInputType = {
   id?: true
-  order?: true
+  rating?: true
+  prevId?: true
+  nextId?: true
 }
 
 export type ItemSumAggregateInputType = {
   id?: true
-  order?: true
+  rating?: true
+  prevId?: true
+  nextId?: true
 }
 
 export type ItemMinAggregateInputType = {
   id?: true
   name?: true
   description?: true
-  order?: true
+  rating?: true
   collectionId?: true
   listId?: true
+  prevId?: true
+  nextId?: true
 }
 
 export type ItemMaxAggregateInputType = {
   id?: true
   name?: true
   description?: true
-  order?: true
+  rating?: true
   collectionId?: true
   listId?: true
+  prevId?: true
+  nextId?: true
 }
 
 export type ItemCountAggregateInputType = {
   id?: true
   name?: true
   description?: true
-  order?: true
+  rating?: true
   collectionId?: true
   listId?: true
+  prevId?: true
+  nextId?: true
   _all?: true
 }
 
@@ -193,9 +213,11 @@ export type ItemGroupByOutputType = {
   id: number
   name: string
   description: string
-  order: number
+  rating: number | null
   collectionId: string
   listId: string
+  prevId: number | null
+  nextId: number | null
   _count: ItemCountAggregateOutputType | null
   _avg: ItemAvgAggregateOutputType | null
   _sum: ItemSumAggregateOutputType | null
@@ -225,9 +247,15 @@ export type ItemWhereInput = {
   id?: Prisma.IntFilter<"Item"> | number
   name?: Prisma.StringFilter<"Item"> | string
   description?: Prisma.StringFilter<"Item"> | string
-  order?: Prisma.IntFilter<"Item"> | number
+  rating?: Prisma.FloatNullableFilter<"Item"> | number | null
   collectionId?: Prisma.StringFilter<"Item"> | string
   listId?: Prisma.StringFilter<"Item"> | string
+  prevId?: Prisma.IntNullableFilter<"Item"> | number | null
+  nextId?: Prisma.IntNullableFilter<"Item"> | number | null
+  prev?: Prisma.XOR<Prisma.ItemNullableScalarRelationFilter, Prisma.ItemWhereInput> | null
+  prevOf?: Prisma.XOR<Prisma.ItemNullableScalarRelationFilter, Prisma.ItemWhereInput> | null
+  next?: Prisma.XOR<Prisma.ItemNullableScalarRelationFilter, Prisma.ItemWhereInput> | null
+  nextOf?: Prisma.XOR<Prisma.ItemNullableScalarRelationFilter, Prisma.ItemWhereInput> | null
   collection?: Prisma.XOR<Prisma.CollectionScalarRelationFilter, Prisma.CollectionWhereInput>
   list?: Prisma.XOR<Prisma.ListScalarRelationFilter, Prisma.ListWhereInput>
 }
@@ -236,34 +264,48 @@ export type ItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  order?: Prisma.SortOrder
+  rating?: Prisma.SortOrderInput | Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   listId?: Prisma.SortOrder
+  prevId?: Prisma.SortOrderInput | Prisma.SortOrder
+  nextId?: Prisma.SortOrderInput | Prisma.SortOrder
+  prev?: Prisma.ItemOrderByWithRelationInput
+  prevOf?: Prisma.ItemOrderByWithRelationInput
+  next?: Prisma.ItemOrderByWithRelationInput
+  nextOf?: Prisma.ItemOrderByWithRelationInput
   collection?: Prisma.CollectionOrderByWithRelationInput
   list?: Prisma.ListOrderByWithRelationInput
 }
 
 export type ItemWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  prevId?: number
+  nextId?: number
   AND?: Prisma.ItemWhereInput | Prisma.ItemWhereInput[]
   OR?: Prisma.ItemWhereInput[]
   NOT?: Prisma.ItemWhereInput | Prisma.ItemWhereInput[]
   name?: Prisma.StringFilter<"Item"> | string
   description?: Prisma.StringFilter<"Item"> | string
-  order?: Prisma.IntFilter<"Item"> | number
+  rating?: Prisma.FloatNullableFilter<"Item"> | number | null
   collectionId?: Prisma.StringFilter<"Item"> | string
   listId?: Prisma.StringFilter<"Item"> | string
+  prev?: Prisma.XOR<Prisma.ItemNullableScalarRelationFilter, Prisma.ItemWhereInput> | null
+  prevOf?: Prisma.XOR<Prisma.ItemNullableScalarRelationFilter, Prisma.ItemWhereInput> | null
+  next?: Prisma.XOR<Prisma.ItemNullableScalarRelationFilter, Prisma.ItemWhereInput> | null
+  nextOf?: Prisma.XOR<Prisma.ItemNullableScalarRelationFilter, Prisma.ItemWhereInput> | null
   collection?: Prisma.XOR<Prisma.CollectionScalarRelationFilter, Prisma.CollectionWhereInput>
   list?: Prisma.XOR<Prisma.ListScalarRelationFilter, Prisma.ListWhereInput>
-}, "id">
+}, "id" | "prevId" | "nextId">
 
 export type ItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  order?: Prisma.SortOrder
+  rating?: Prisma.SortOrderInput | Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   listId?: Prisma.SortOrder
+  prevId?: Prisma.SortOrderInput | Prisma.SortOrder
+  nextId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ItemCountOrderByAggregateInput
   _avg?: Prisma.ItemAvgOrderByAggregateInput
   _max?: Prisma.ItemMaxOrderByAggregateInput
@@ -278,15 +320,21 @@ export type ItemScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Item"> | number
   name?: Prisma.StringWithAggregatesFilter<"Item"> | string
   description?: Prisma.StringWithAggregatesFilter<"Item"> | string
-  order?: Prisma.IntWithAggregatesFilter<"Item"> | number
+  rating?: Prisma.FloatNullableWithAggregatesFilter<"Item"> | number | null
   collectionId?: Prisma.StringWithAggregatesFilter<"Item"> | string
   listId?: Prisma.StringWithAggregatesFilter<"Item"> | string
+  prevId?: Prisma.IntNullableWithAggregatesFilter<"Item"> | number | null
+  nextId?: Prisma.IntNullableWithAggregatesFilter<"Item"> | number | null
 }
 
 export type ItemCreateInput = {
   name: string
   description: string
-  order: number
+  rating?: number | null
+  prev?: Prisma.ItemCreateNestedOneWithoutPrevOfInput
+  prevOf?: Prisma.ItemCreateNestedOneWithoutPrevInput
+  next?: Prisma.ItemCreateNestedOneWithoutNextOfInput
+  nextOf?: Prisma.ItemCreateNestedOneWithoutNextInput
   collection: Prisma.CollectionCreateNestedOneWithoutItemsInput
   list: Prisma.ListCreateNestedOneWithoutItemsInput
 }
@@ -295,15 +343,23 @@ export type ItemUncheckedCreateInput = {
   id?: number
   name: string
   description: string
-  order: number
+  rating?: number | null
   collectionId: string
   listId: string
+  prevId?: number | null
+  nextId?: number | null
+  prevOf?: Prisma.ItemUncheckedCreateNestedOneWithoutPrevInput
+  nextOf?: Prisma.ItemUncheckedCreateNestedOneWithoutNextInput
 }
 
 export type ItemUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prev?: Prisma.ItemUpdateOneWithoutPrevOfNestedInput
+  prevOf?: Prisma.ItemUpdateOneWithoutPrevNestedInput
+  next?: Prisma.ItemUpdateOneWithoutNextOfNestedInput
+  nextOf?: Prisma.ItemUpdateOneWithoutNextNestedInput
   collection?: Prisma.CollectionUpdateOneRequiredWithoutItemsNestedInput
   list?: Prisma.ListUpdateOneRequiredWithoutItemsNestedInput
 }
@@ -312,33 +368,41 @@ export type ItemUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   listId?: Prisma.StringFieldUpdateOperationsInput | string
+  prevId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  nextId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  prevOf?: Prisma.ItemUncheckedUpdateOneWithoutPrevNestedInput
+  nextOf?: Prisma.ItemUncheckedUpdateOneWithoutNextNestedInput
 }
 
 export type ItemCreateManyInput = {
   id?: number
   name: string
   description: string
-  order: number
+  rating?: number | null
   collectionId: string
   listId: string
+  prevId?: number | null
+  nextId?: number | null
 }
 
 export type ItemUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type ItemUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   listId?: Prisma.StringFieldUpdateOperationsInput | string
+  prevId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  nextId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type ItemListRelationFilter = {
@@ -351,41 +415,56 @@ export type ItemOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type ItemNullableScalarRelationFilter = {
+  is?: Prisma.ItemWhereInput | null
+  isNot?: Prisma.ItemWhereInput | null
+}
+
 export type ItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  order?: Prisma.SortOrder
+  rating?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   listId?: Prisma.SortOrder
+  prevId?: Prisma.SortOrder
+  nextId?: Prisma.SortOrder
 }
 
 export type ItemAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  order?: Prisma.SortOrder
+  rating?: Prisma.SortOrder
+  prevId?: Prisma.SortOrder
+  nextId?: Prisma.SortOrder
 }
 
 export type ItemMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  order?: Prisma.SortOrder
+  rating?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   listId?: Prisma.SortOrder
+  prevId?: Prisma.SortOrder
+  nextId?: Prisma.SortOrder
 }
 
 export type ItemMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  order?: Prisma.SortOrder
+  rating?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   listId?: Prisma.SortOrder
+  prevId?: Prisma.SortOrder
+  nextId?: Prisma.SortOrder
 }
 
 export type ItemSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  order?: Prisma.SortOrder
+  rating?: Prisma.SortOrder
+  prevId?: Prisma.SortOrder
+  nextId?: Prisma.SortOrder
 }
 
 export type ItemCreateNestedManyWithoutCollectionInput = {
@@ -472,10 +551,118 @@ export type ItemUncheckedUpdateManyWithoutListNestedInput = {
   deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
 }
 
+export type ItemCreateNestedOneWithoutPrevOfInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutPrevOfInput, Prisma.ItemUncheckedCreateWithoutPrevOfInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutPrevOfInput
+  connect?: Prisma.ItemWhereUniqueInput
+}
+
+export type ItemCreateNestedOneWithoutPrevInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutPrevInput, Prisma.ItemUncheckedCreateWithoutPrevInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutPrevInput
+  connect?: Prisma.ItemWhereUniqueInput
+}
+
+export type ItemCreateNestedOneWithoutNextOfInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutNextOfInput, Prisma.ItemUncheckedCreateWithoutNextOfInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutNextOfInput
+  connect?: Prisma.ItemWhereUniqueInput
+}
+
+export type ItemCreateNestedOneWithoutNextInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutNextInput, Prisma.ItemUncheckedCreateWithoutNextInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutNextInput
+  connect?: Prisma.ItemWhereUniqueInput
+}
+
+export type ItemUncheckedCreateNestedOneWithoutPrevInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutPrevInput, Prisma.ItemUncheckedCreateWithoutPrevInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutPrevInput
+  connect?: Prisma.ItemWhereUniqueInput
+}
+
+export type ItemUncheckedCreateNestedOneWithoutNextInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutNextInput, Prisma.ItemUncheckedCreateWithoutNextInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutNextInput
+  connect?: Prisma.ItemWhereUniqueInput
+}
+
+export type ItemUpdateOneWithoutPrevOfNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutPrevOfInput, Prisma.ItemUncheckedCreateWithoutPrevOfInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutPrevOfInput
+  upsert?: Prisma.ItemUpsertWithoutPrevOfInput
+  disconnect?: Prisma.ItemWhereInput | boolean
+  delete?: Prisma.ItemWhereInput | boolean
+  connect?: Prisma.ItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ItemUpdateToOneWithWhereWithoutPrevOfInput, Prisma.ItemUpdateWithoutPrevOfInput>, Prisma.ItemUncheckedUpdateWithoutPrevOfInput>
+}
+
+export type ItemUpdateOneWithoutPrevNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutPrevInput, Prisma.ItemUncheckedCreateWithoutPrevInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutPrevInput
+  upsert?: Prisma.ItemUpsertWithoutPrevInput
+  disconnect?: Prisma.ItemWhereInput | boolean
+  delete?: Prisma.ItemWhereInput | boolean
+  connect?: Prisma.ItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ItemUpdateToOneWithWhereWithoutPrevInput, Prisma.ItemUpdateWithoutPrevInput>, Prisma.ItemUncheckedUpdateWithoutPrevInput>
+}
+
+export type ItemUpdateOneWithoutNextOfNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutNextOfInput, Prisma.ItemUncheckedCreateWithoutNextOfInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutNextOfInput
+  upsert?: Prisma.ItemUpsertWithoutNextOfInput
+  disconnect?: Prisma.ItemWhereInput | boolean
+  delete?: Prisma.ItemWhereInput | boolean
+  connect?: Prisma.ItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ItemUpdateToOneWithWhereWithoutNextOfInput, Prisma.ItemUpdateWithoutNextOfInput>, Prisma.ItemUncheckedUpdateWithoutNextOfInput>
+}
+
+export type ItemUpdateOneWithoutNextNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutNextInput, Prisma.ItemUncheckedCreateWithoutNextInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutNextInput
+  upsert?: Prisma.ItemUpsertWithoutNextInput
+  disconnect?: Prisma.ItemWhereInput | boolean
+  delete?: Prisma.ItemWhereInput | boolean
+  connect?: Prisma.ItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ItemUpdateToOneWithWhereWithoutNextInput, Prisma.ItemUpdateWithoutNextInput>, Prisma.ItemUncheckedUpdateWithoutNextInput>
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type ItemUncheckedUpdateOneWithoutPrevNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutPrevInput, Prisma.ItemUncheckedCreateWithoutPrevInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutPrevInput
+  upsert?: Prisma.ItemUpsertWithoutPrevInput
+  disconnect?: Prisma.ItemWhereInput | boolean
+  delete?: Prisma.ItemWhereInput | boolean
+  connect?: Prisma.ItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ItemUpdateToOneWithWhereWithoutPrevInput, Prisma.ItemUpdateWithoutPrevInput>, Prisma.ItemUncheckedUpdateWithoutPrevInput>
+}
+
+export type ItemUncheckedUpdateOneWithoutNextNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutNextInput, Prisma.ItemUncheckedCreateWithoutNextInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutNextInput
+  upsert?: Prisma.ItemUpsertWithoutNextInput
+  disconnect?: Prisma.ItemWhereInput | boolean
+  delete?: Prisma.ItemWhereInput | boolean
+  connect?: Prisma.ItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ItemUpdateToOneWithWhereWithoutNextInput, Prisma.ItemUpdateWithoutNextInput>, Prisma.ItemUncheckedUpdateWithoutNextInput>
+}
+
 export type ItemCreateWithoutCollectionInput = {
   name: string
   description: string
-  order: number
+  rating?: number | null
+  prev?: Prisma.ItemCreateNestedOneWithoutPrevOfInput
+  prevOf?: Prisma.ItemCreateNestedOneWithoutPrevInput
+  next?: Prisma.ItemCreateNestedOneWithoutNextOfInput
+  nextOf?: Prisma.ItemCreateNestedOneWithoutNextInput
   list: Prisma.ListCreateNestedOneWithoutItemsInput
 }
 
@@ -483,8 +670,12 @@ export type ItemUncheckedCreateWithoutCollectionInput = {
   id?: number
   name: string
   description: string
-  order: number
+  rating?: number | null
   listId: string
+  prevId?: number | null
+  nextId?: number | null
+  prevOf?: Prisma.ItemUncheckedCreateNestedOneWithoutPrevInput
+  nextOf?: Prisma.ItemUncheckedCreateNestedOneWithoutNextInput
 }
 
 export type ItemCreateOrConnectWithoutCollectionInput = {
@@ -519,15 +710,21 @@ export type ItemScalarWhereInput = {
   id?: Prisma.IntFilter<"Item"> | number
   name?: Prisma.StringFilter<"Item"> | string
   description?: Prisma.StringFilter<"Item"> | string
-  order?: Prisma.IntFilter<"Item"> | number
+  rating?: Prisma.FloatNullableFilter<"Item"> | number | null
   collectionId?: Prisma.StringFilter<"Item"> | string
   listId?: Prisma.StringFilter<"Item"> | string
+  prevId?: Prisma.IntNullableFilter<"Item"> | number | null
+  nextId?: Prisma.IntNullableFilter<"Item"> | number | null
 }
 
 export type ItemCreateWithoutListInput = {
   name: string
   description: string
-  order: number
+  rating?: number | null
+  prev?: Prisma.ItemCreateNestedOneWithoutPrevOfInput
+  prevOf?: Prisma.ItemCreateNestedOneWithoutPrevInput
+  next?: Prisma.ItemCreateNestedOneWithoutNextOfInput
+  nextOf?: Prisma.ItemCreateNestedOneWithoutNextInput
   collection: Prisma.CollectionCreateNestedOneWithoutItemsInput
 }
 
@@ -535,8 +732,12 @@ export type ItemUncheckedCreateWithoutListInput = {
   id?: number
   name: string
   description: string
-  order: number
+  rating?: number | null
   collectionId: string
+  prevId?: number | null
+  nextId?: number | null
+  prevOf?: Prisma.ItemUncheckedCreateNestedOneWithoutPrevInput
+  nextOf?: Prisma.ItemUncheckedCreateNestedOneWithoutNextInput
 }
 
 export type ItemCreateOrConnectWithoutListInput = {
@@ -564,18 +765,272 @@ export type ItemUpdateManyWithWhereWithoutListInput = {
   data: Prisma.XOR<Prisma.ItemUpdateManyMutationInput, Prisma.ItemUncheckedUpdateManyWithoutListInput>
 }
 
+export type ItemCreateWithoutPrevOfInput = {
+  name: string
+  description: string
+  rating?: number | null
+  prev?: Prisma.ItemCreateNestedOneWithoutPrevOfInput
+  next?: Prisma.ItemCreateNestedOneWithoutNextOfInput
+  nextOf?: Prisma.ItemCreateNestedOneWithoutNextInput
+  collection: Prisma.CollectionCreateNestedOneWithoutItemsInput
+  list: Prisma.ListCreateNestedOneWithoutItemsInput
+}
+
+export type ItemUncheckedCreateWithoutPrevOfInput = {
+  id?: number
+  name: string
+  description: string
+  rating?: number | null
+  collectionId: string
+  listId: string
+  prevId?: number | null
+  nextId?: number | null
+  nextOf?: Prisma.ItemUncheckedCreateNestedOneWithoutNextInput
+}
+
+export type ItemCreateOrConnectWithoutPrevOfInput = {
+  where: Prisma.ItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ItemCreateWithoutPrevOfInput, Prisma.ItemUncheckedCreateWithoutPrevOfInput>
+}
+
+export type ItemCreateWithoutPrevInput = {
+  name: string
+  description: string
+  rating?: number | null
+  prevOf?: Prisma.ItemCreateNestedOneWithoutPrevInput
+  next?: Prisma.ItemCreateNestedOneWithoutNextOfInput
+  nextOf?: Prisma.ItemCreateNestedOneWithoutNextInput
+  collection: Prisma.CollectionCreateNestedOneWithoutItemsInput
+  list: Prisma.ListCreateNestedOneWithoutItemsInput
+}
+
+export type ItemUncheckedCreateWithoutPrevInput = {
+  id?: number
+  name: string
+  description: string
+  rating?: number | null
+  collectionId: string
+  listId: string
+  nextId?: number | null
+  prevOf?: Prisma.ItemUncheckedCreateNestedOneWithoutPrevInput
+  nextOf?: Prisma.ItemUncheckedCreateNestedOneWithoutNextInput
+}
+
+export type ItemCreateOrConnectWithoutPrevInput = {
+  where: Prisma.ItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ItemCreateWithoutPrevInput, Prisma.ItemUncheckedCreateWithoutPrevInput>
+}
+
+export type ItemCreateWithoutNextOfInput = {
+  name: string
+  description: string
+  rating?: number | null
+  prev?: Prisma.ItemCreateNestedOneWithoutPrevOfInput
+  prevOf?: Prisma.ItemCreateNestedOneWithoutPrevInput
+  next?: Prisma.ItemCreateNestedOneWithoutNextOfInput
+  collection: Prisma.CollectionCreateNestedOneWithoutItemsInput
+  list: Prisma.ListCreateNestedOneWithoutItemsInput
+}
+
+export type ItemUncheckedCreateWithoutNextOfInput = {
+  id?: number
+  name: string
+  description: string
+  rating?: number | null
+  collectionId: string
+  listId: string
+  prevId?: number | null
+  nextId?: number | null
+  prevOf?: Prisma.ItemUncheckedCreateNestedOneWithoutPrevInput
+}
+
+export type ItemCreateOrConnectWithoutNextOfInput = {
+  where: Prisma.ItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ItemCreateWithoutNextOfInput, Prisma.ItemUncheckedCreateWithoutNextOfInput>
+}
+
+export type ItemCreateWithoutNextInput = {
+  name: string
+  description: string
+  rating?: number | null
+  prev?: Prisma.ItemCreateNestedOneWithoutPrevOfInput
+  prevOf?: Prisma.ItemCreateNestedOneWithoutPrevInput
+  nextOf?: Prisma.ItemCreateNestedOneWithoutNextInput
+  collection: Prisma.CollectionCreateNestedOneWithoutItemsInput
+  list: Prisma.ListCreateNestedOneWithoutItemsInput
+}
+
+export type ItemUncheckedCreateWithoutNextInput = {
+  id?: number
+  name: string
+  description: string
+  rating?: number | null
+  collectionId: string
+  listId: string
+  prevId?: number | null
+  prevOf?: Prisma.ItemUncheckedCreateNestedOneWithoutPrevInput
+  nextOf?: Prisma.ItemUncheckedCreateNestedOneWithoutNextInput
+}
+
+export type ItemCreateOrConnectWithoutNextInput = {
+  where: Prisma.ItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ItemCreateWithoutNextInput, Prisma.ItemUncheckedCreateWithoutNextInput>
+}
+
+export type ItemUpsertWithoutPrevOfInput = {
+  update: Prisma.XOR<Prisma.ItemUpdateWithoutPrevOfInput, Prisma.ItemUncheckedUpdateWithoutPrevOfInput>
+  create: Prisma.XOR<Prisma.ItemCreateWithoutPrevOfInput, Prisma.ItemUncheckedCreateWithoutPrevOfInput>
+  where?: Prisma.ItemWhereInput
+}
+
+export type ItemUpdateToOneWithWhereWithoutPrevOfInput = {
+  where?: Prisma.ItemWhereInput
+  data: Prisma.XOR<Prisma.ItemUpdateWithoutPrevOfInput, Prisma.ItemUncheckedUpdateWithoutPrevOfInput>
+}
+
+export type ItemUpdateWithoutPrevOfInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prev?: Prisma.ItemUpdateOneWithoutPrevOfNestedInput
+  next?: Prisma.ItemUpdateOneWithoutNextOfNestedInput
+  nextOf?: Prisma.ItemUpdateOneWithoutNextNestedInput
+  collection?: Prisma.CollectionUpdateOneRequiredWithoutItemsNestedInput
+  list?: Prisma.ListUpdateOneRequiredWithoutItemsNestedInput
+}
+
+export type ItemUncheckedUpdateWithoutPrevOfInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  collectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  listId?: Prisma.StringFieldUpdateOperationsInput | string
+  prevId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  nextId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  nextOf?: Prisma.ItemUncheckedUpdateOneWithoutNextNestedInput
+}
+
+export type ItemUpsertWithoutPrevInput = {
+  update: Prisma.XOR<Prisma.ItemUpdateWithoutPrevInput, Prisma.ItemUncheckedUpdateWithoutPrevInput>
+  create: Prisma.XOR<Prisma.ItemCreateWithoutPrevInput, Prisma.ItemUncheckedCreateWithoutPrevInput>
+  where?: Prisma.ItemWhereInput
+}
+
+export type ItemUpdateToOneWithWhereWithoutPrevInput = {
+  where?: Prisma.ItemWhereInput
+  data: Prisma.XOR<Prisma.ItemUpdateWithoutPrevInput, Prisma.ItemUncheckedUpdateWithoutPrevInput>
+}
+
+export type ItemUpdateWithoutPrevInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prevOf?: Prisma.ItemUpdateOneWithoutPrevNestedInput
+  next?: Prisma.ItemUpdateOneWithoutNextOfNestedInput
+  nextOf?: Prisma.ItemUpdateOneWithoutNextNestedInput
+  collection?: Prisma.CollectionUpdateOneRequiredWithoutItemsNestedInput
+  list?: Prisma.ListUpdateOneRequiredWithoutItemsNestedInput
+}
+
+export type ItemUncheckedUpdateWithoutPrevInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  collectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  listId?: Prisma.StringFieldUpdateOperationsInput | string
+  nextId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  prevOf?: Prisma.ItemUncheckedUpdateOneWithoutPrevNestedInput
+  nextOf?: Prisma.ItemUncheckedUpdateOneWithoutNextNestedInput
+}
+
+export type ItemUpsertWithoutNextOfInput = {
+  update: Prisma.XOR<Prisma.ItemUpdateWithoutNextOfInput, Prisma.ItemUncheckedUpdateWithoutNextOfInput>
+  create: Prisma.XOR<Prisma.ItemCreateWithoutNextOfInput, Prisma.ItemUncheckedCreateWithoutNextOfInput>
+  where?: Prisma.ItemWhereInput
+}
+
+export type ItemUpdateToOneWithWhereWithoutNextOfInput = {
+  where?: Prisma.ItemWhereInput
+  data: Prisma.XOR<Prisma.ItemUpdateWithoutNextOfInput, Prisma.ItemUncheckedUpdateWithoutNextOfInput>
+}
+
+export type ItemUpdateWithoutNextOfInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prev?: Prisma.ItemUpdateOneWithoutPrevOfNestedInput
+  prevOf?: Prisma.ItemUpdateOneWithoutPrevNestedInput
+  next?: Prisma.ItemUpdateOneWithoutNextOfNestedInput
+  collection?: Prisma.CollectionUpdateOneRequiredWithoutItemsNestedInput
+  list?: Prisma.ListUpdateOneRequiredWithoutItemsNestedInput
+}
+
+export type ItemUncheckedUpdateWithoutNextOfInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  collectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  listId?: Prisma.StringFieldUpdateOperationsInput | string
+  prevId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  nextId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  prevOf?: Prisma.ItemUncheckedUpdateOneWithoutPrevNestedInput
+}
+
+export type ItemUpsertWithoutNextInput = {
+  update: Prisma.XOR<Prisma.ItemUpdateWithoutNextInput, Prisma.ItemUncheckedUpdateWithoutNextInput>
+  create: Prisma.XOR<Prisma.ItemCreateWithoutNextInput, Prisma.ItemUncheckedCreateWithoutNextInput>
+  where?: Prisma.ItemWhereInput
+}
+
+export type ItemUpdateToOneWithWhereWithoutNextInput = {
+  where?: Prisma.ItemWhereInput
+  data: Prisma.XOR<Prisma.ItemUpdateWithoutNextInput, Prisma.ItemUncheckedUpdateWithoutNextInput>
+}
+
+export type ItemUpdateWithoutNextInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prev?: Prisma.ItemUpdateOneWithoutPrevOfNestedInput
+  prevOf?: Prisma.ItemUpdateOneWithoutPrevNestedInput
+  nextOf?: Prisma.ItemUpdateOneWithoutNextNestedInput
+  collection?: Prisma.CollectionUpdateOneRequiredWithoutItemsNestedInput
+  list?: Prisma.ListUpdateOneRequiredWithoutItemsNestedInput
+}
+
+export type ItemUncheckedUpdateWithoutNextInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  collectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  listId?: Prisma.StringFieldUpdateOperationsInput | string
+  prevId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  prevOf?: Prisma.ItemUncheckedUpdateOneWithoutPrevNestedInput
+  nextOf?: Prisma.ItemUncheckedUpdateOneWithoutNextNestedInput
+}
+
 export type ItemCreateManyCollectionInput = {
   id?: number
   name: string
   description: string
-  order: number
+  rating?: number | null
   listId: string
+  prevId?: number | null
+  nextId?: number | null
 }
 
 export type ItemUpdateWithoutCollectionInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prev?: Prisma.ItemUpdateOneWithoutPrevOfNestedInput
+  prevOf?: Prisma.ItemUpdateOneWithoutPrevNestedInput
+  next?: Prisma.ItemUpdateOneWithoutNextOfNestedInput
+  nextOf?: Prisma.ItemUpdateOneWithoutNextNestedInput
   list?: Prisma.ListUpdateOneRequiredWithoutItemsNestedInput
 }
 
@@ -583,30 +1038,42 @@ export type ItemUncheckedUpdateWithoutCollectionInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   listId?: Prisma.StringFieldUpdateOperationsInput | string
+  prevId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  nextId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  prevOf?: Prisma.ItemUncheckedUpdateOneWithoutPrevNestedInput
+  nextOf?: Prisma.ItemUncheckedUpdateOneWithoutNextNestedInput
 }
 
 export type ItemUncheckedUpdateManyWithoutCollectionInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   listId?: Prisma.StringFieldUpdateOperationsInput | string
+  prevId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  nextId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type ItemCreateManyListInput = {
   id?: number
   name: string
   description: string
-  order: number
+  rating?: number | null
   collectionId: string
+  prevId?: number | null
+  nextId?: number | null
 }
 
 export type ItemUpdateWithoutListInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prev?: Prisma.ItemUpdateOneWithoutPrevOfNestedInput
+  prevOf?: Prisma.ItemUpdateOneWithoutPrevNestedInput
+  next?: Prisma.ItemUpdateOneWithoutNextOfNestedInput
+  nextOf?: Prisma.ItemUpdateOneWithoutNextNestedInput
   collection?: Prisma.CollectionUpdateOneRequiredWithoutItemsNestedInput
 }
 
@@ -614,16 +1081,22 @@ export type ItemUncheckedUpdateWithoutListInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  prevId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  nextId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  prevOf?: Prisma.ItemUncheckedUpdateOneWithoutPrevNestedInput
+  nextOf?: Prisma.ItemUncheckedUpdateOneWithoutNextNestedInput
 }
 
 export type ItemUncheckedUpdateManyWithoutListInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  prevId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  nextId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -632,9 +1105,15 @@ export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   name?: boolean
   description?: boolean
-  order?: boolean
+  rating?: boolean
   collectionId?: boolean
   listId?: boolean
+  prevId?: boolean
+  nextId?: boolean
+  prev?: boolean | Prisma.Item$prevArgs<ExtArgs>
+  prevOf?: boolean | Prisma.Item$prevOfArgs<ExtArgs>
+  next?: boolean | Prisma.Item$nextArgs<ExtArgs>
+  nextOf?: boolean | Prisma.Item$nextOfArgs<ExtArgs>
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
   list?: boolean | Prisma.ListDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
@@ -643,9 +1122,13 @@ export type ItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   name?: boolean
   description?: boolean
-  order?: boolean
+  rating?: boolean
   collectionId?: boolean
   listId?: boolean
+  prevId?: boolean
+  nextId?: boolean
+  prev?: boolean | Prisma.Item$prevArgs<ExtArgs>
+  next?: boolean | Prisma.Item$nextArgs<ExtArgs>
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
   list?: boolean | Prisma.ListDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
@@ -654,9 +1137,13 @@ export type ItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   name?: boolean
   description?: boolean
-  order?: boolean
+  rating?: boolean
   collectionId?: boolean
   listId?: boolean
+  prevId?: boolean
+  nextId?: boolean
+  prev?: boolean | Prisma.Item$prevArgs<ExtArgs>
+  next?: boolean | Prisma.Item$nextArgs<ExtArgs>
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
   list?: boolean | Prisma.ListDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
@@ -665,21 +1152,31 @@ export type ItemSelectScalar = {
   id?: boolean
   name?: boolean
   description?: boolean
-  order?: boolean
+  rating?: boolean
   collectionId?: boolean
   listId?: boolean
+  prevId?: boolean
+  nextId?: boolean
 }
 
-export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "order" | "collectionId" | "listId", ExtArgs["result"]["item"]>
+export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "rating" | "collectionId" | "listId" | "prevId" | "nextId", ExtArgs["result"]["item"]>
 export type ItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  prev?: boolean | Prisma.Item$prevArgs<ExtArgs>
+  prevOf?: boolean | Prisma.Item$prevOfArgs<ExtArgs>
+  next?: boolean | Prisma.Item$nextArgs<ExtArgs>
+  nextOf?: boolean | Prisma.Item$nextOfArgs<ExtArgs>
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
   list?: boolean | Prisma.ListDefaultArgs<ExtArgs>
 }
 export type ItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  prev?: boolean | Prisma.Item$prevArgs<ExtArgs>
+  next?: boolean | Prisma.Item$nextArgs<ExtArgs>
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
   list?: boolean | Prisma.ListDefaultArgs<ExtArgs>
 }
 export type ItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  prev?: boolean | Prisma.Item$prevArgs<ExtArgs>
+  next?: boolean | Prisma.Item$nextArgs<ExtArgs>
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
   list?: boolean | Prisma.ListDefaultArgs<ExtArgs>
 }
@@ -687,6 +1184,10 @@ export type ItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Item"
   objects: {
+    prev: Prisma.$ItemPayload<ExtArgs> | null
+    prevOf: Prisma.$ItemPayload<ExtArgs> | null
+    next: Prisma.$ItemPayload<ExtArgs> | null
+    nextOf: Prisma.$ItemPayload<ExtArgs> | null
     collection: Prisma.$CollectionPayload<ExtArgs>
     list: Prisma.$ListPayload<ExtArgs>
   }
@@ -694,9 +1195,20 @@ export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: number
     name: string
     description: string
-    order: number
+    /**
+     * Computed from linked-list position within the list's startingRating
+     */
+    rating: number | null
     collectionId: string
     listId: string
+    /**
+     * ID of the item that comes immediately before this one in the list (null = head)
+     */
+    prevId: number | null
+    /**
+     * ID of the item that comes immediately after this one in the list (null = tail)
+     */
+    nextId: number | null
   }, ExtArgs["result"]["item"]>
   composites: {}
 }
@@ -1091,6 +1603,10 @@ readonly fields: ItemFieldRefs;
  */
 export interface Prisma__ItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  prev<T extends Prisma.Item$prevArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$prevArgs<ExtArgs>>): Prisma.Prisma__ItemClient<runtime.Types.Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  prevOf<T extends Prisma.Item$prevOfArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$prevOfArgs<ExtArgs>>): Prisma.Prisma__ItemClient<runtime.Types.Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  next<T extends Prisma.Item$nextArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$nextArgs<ExtArgs>>): Prisma.Prisma__ItemClient<runtime.Types.Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  nextOf<T extends Prisma.Item$nextOfArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$nextOfArgs<ExtArgs>>): Prisma.Prisma__ItemClient<runtime.Types.Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   collection<T extends Prisma.CollectionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CollectionDefaultArgs<ExtArgs>>): Prisma.Prisma__CollectionClient<runtime.Types.Result.GetResult<Prisma.$CollectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   list<T extends Prisma.ListDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListDefaultArgs<ExtArgs>>): Prisma.Prisma__ListClient<runtime.Types.Result.GetResult<Prisma.$ListPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1125,9 +1641,11 @@ export interface ItemFieldRefs {
   readonly id: Prisma.FieldRef<"Item", 'Int'>
   readonly name: Prisma.FieldRef<"Item", 'String'>
   readonly description: Prisma.FieldRef<"Item", 'String'>
-  readonly order: Prisma.FieldRef<"Item", 'Int'>
+  readonly rating: Prisma.FieldRef<"Item", 'Float'>
   readonly collectionId: Prisma.FieldRef<"Item", 'String'>
   readonly listId: Prisma.FieldRef<"Item", 'String'>
+  readonly prevId: Prisma.FieldRef<"Item", 'Int'>
+  readonly nextId: Prisma.FieldRef<"Item", 'Int'>
 }
     
 
@@ -1524,6 +2042,82 @@ export type ItemDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Items to delete.
    */
   limit?: number
+}
+
+/**
+ * Item.prev
+ */
+export type Item$prevArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Item
+   */
+  select?: Prisma.ItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Item
+   */
+  omit?: Prisma.ItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ItemInclude<ExtArgs> | null
+  where?: Prisma.ItemWhereInput
+}
+
+/**
+ * Item.prevOf
+ */
+export type Item$prevOfArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Item
+   */
+  select?: Prisma.ItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Item
+   */
+  omit?: Prisma.ItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ItemInclude<ExtArgs> | null
+  where?: Prisma.ItemWhereInput
+}
+
+/**
+ * Item.next
+ */
+export type Item$nextArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Item
+   */
+  select?: Prisma.ItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Item
+   */
+  omit?: Prisma.ItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ItemInclude<ExtArgs> | null
+  where?: Prisma.ItemWhereInput
+}
+
+/**
+ * Item.nextOf
+ */
+export type Item$nextOfArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Item
+   */
+  select?: Prisma.ItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Item
+   */
+  omit?: Prisma.ItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ItemInclude<ExtArgs> | null
+  where?: Prisma.ItemWhereInput
 }
 
 /**

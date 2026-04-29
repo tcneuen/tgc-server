@@ -61,7 +61,7 @@ router.get("/:id", async (req, res, next) => {
   try {
     const collection = await prisma.collection.findFirst({
       where: { id: req.params.id, userId },
-      include: { lists: true, items: { orderBy: { order: "asc" } } },
+      include: { lists: true, items: true },
     });
     if (!collection) {
       res.status(404).json({ error: "Collection not found" });

@@ -1,16 +1,16 @@
-### GET all items in a collection
+### GET all items in a collection (returned in linked-list order per list)
 GET https://{{host}}:{{$dotenv PORT}}/{{version}}/collections/{{collectionId}}/items HTTP/1.1
 Content-Type: application/json
 Authorization: token {{$dotenv TOKEN}}
 
 
-### GET items filtered by list
+### GET items filtered by list (returned in linked-list order)
 GET https://{{host}}:{{$dotenv PORT}}/{{version}}/collections/{{collectionId}}/items?listId={{listId}} HTTP/1.1
 Content-Type: application/json
 Authorization: token {{$dotenv TOKEN}}
 
 
-### POST create item
+### POST create item at tail of list (afterId omitted = append at tail; null = insert at head)
 POST https://{{host}}:{{$dotenv PORT}}/{{version}}/collections/{{collectionId}}/items HTTP/1.1
 Content-Type: application/json
 Authorization: token {{$dotenv TOKEN}}
@@ -22,7 +22,7 @@ Authorization: token {{$dotenv TOKEN}}
 }
 
 
-### POST create item with explicit order
+### POST create item at head of list (afterId: null)
 POST https://{{host}}:{{$dotenv PORT}}/{{version}}/collections/{{collectionId}}/items HTTP/1.1
 Content-Type: application/json
 Authorization: token {{$dotenv TOKEN}}
@@ -31,7 +31,20 @@ Authorization: token {{$dotenv TOKEN}}
     "name": "Inception",
     "description": "2010 science fiction film",
     "listId": "{{listId}}",
-    "order": 1
+    "afterId": null
+}
+
+
+### POST create item after a specific item
+POST https://{{host}}:{{$dotenv PORT}}/{{version}}/collections/{{collectionId}}/items HTTP/1.1
+Content-Type: application/json
+Authorization: token {{$dotenv TOKEN}}
+
+{
+    "name": "Interstellar",
+    "description": "2014 science fiction film",
+    "listId": "{{listId}}",
+    "afterId": {{itemId}}
 }
 
 
@@ -46,14 +59,25 @@ Authorization: token {{$dotenv TOKEN}}
 }
 
 
-### PATCH move item to a different list at a specific position
+### PATCH move item to head of a list
 PATCH https://{{host}}:{{$dotenv PORT}}/{{version}}/collections/{{collectionId}}/items/{{itemId}}/move HTTP/1.1
 Content-Type: application/json
 Authorization: token {{$dotenv TOKEN}}
 
 {
     "listId": "{{targetListId}}",
-    "order": 1
+    "afterId": null
+}
+
+
+### PATCH move item after a specific item in a list
+PATCH https://{{host}}:{{$dotenv PORT}}/{{version}}/collections/{{collectionId}}/items/{{itemId}}/move HTTP/1.1
+Content-Type: application/json
+Authorization: token {{$dotenv TOKEN}}
+
+{
+    "listId": "{{targetListId}}",
+    "afterId": {{afterItemId}}
 }
 
 

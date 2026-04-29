@@ -19,7 +19,7 @@ beforeAll(async () => {
   const listRes = await request(app)
     .post(`/v1/collections/${collectionId}/lists`)
     .set("Authorization", `token ${token}`)
-    .send({ name: "Ranked" });
+    .send({ name: "Ranked", startingRating: 1400 });
   listId = listRes.body.id;
 });
 
@@ -32,7 +32,7 @@ afterAll(async () => {
 });
 
 describe("POST /v1/collections/:collectionId/items", () => {
-  it("creates an item and auto-assigns order = 1 for the first item", async () => {
+  it("creates the first item as the head (prevId=null, nextId=null)", async () => {
     const res = await request(app)
       .post(`/v1/collections/${collectionId}/items`)
       .set("Authorization", `token ${token}`)
@@ -43,11 +43,11 @@ describe("POST /v1/collections/:collectionId/items", () => {
       });
 
     expect(res.status).toBe(201);
-    expect(res.body).toMatchObject({ name: "The Dark Knight", order: 1 });
+    expect(res.body).toMatchObject({ name: "The Dark Knight", prevId: null, nextId: null });
     itemId = res.body.id;
   });
 
-  it("appends a second item with order = 2", async () => {
+  it("appends a second item (afterId omitted = after existing head)", async () => {
     const res = await request(app)
       .post(`/v1/collections/${collectionId}/items`)
       .set("Authorization", `token ${token}`)
@@ -55,13 +55,14 @@ describe("POST /v1/collections/:collectionId/items", () => {
         name: "Inception",
         description: "2010 film by Christopher Nolan",
         listId,
+        afterId: itemId,
       });
 
     expect(res.status).toBe(201);
-    expect(res.body).toHaveProperty("order", 2);
+    expect(res.body).toMatchObject({ prevId: itemId, nextId: null });
   });
 
-  it("accepts an explicit order value", async () => {
+  it("inserts item at the head when afterId is null", async () => {
     const res = await request(app)
       .post(`/v1/collections/${collectionId}/items`)
       .set("Authorization", `token ${token}`)
@@ -69,11 +70,13 @@ describe("POST /v1/collections/:collectionId/items", () => {
         name: "Interstellar",
         description: "2014 film",
         listId,
-        order: 1,
+        afterId: null,
       });
 
     expect(res.status).toBe(201);
-    expect(res.body).toHaveProperty("order", 1);
+    // New item becomes head: prevId null, nextId points to old head
+    expect(res.body.prevId).toBeNull();
+    expect(res.body.nextId).toBe(itemId);
   });
 
   it("returns 400 when listId is missing", async () => {
@@ -96,15 +99,21 @@ describe("POST /v1/collections/:collectionId/items", () => {
 });
 
 describe("GET /v1/collections/:collectionId/items", () => {
-  it("returns all items ordered by order asc", async () => {
+  it("returns all items in linked-list order", async () => {
     const res = await request(app)
       .get(`/v1/collections/${collectionId}/items`)
       .set("Authorization", `token ${token}`);
 
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
-    const orders = res.body.map((i: { order: number }) => i.order);
-    expect(orders).toEqual([...orders].sort((a, b) => a - b));
+    // Each item's nextId should match the next item's id
+    for (let i = 0; i < res.body.length - 1; i++) {
+      expect(res.body[i].nextId).toBe(res.body[i + 1].id);
+    }
+    // Last item has nextId = null
+    if (res.body.length > 0) {
+      expect(res.body[res.body.length - 1].nextId).toBeNull();
+    }
   });
 
   it("filters items by listId query param", async () => {
@@ -142,7 +151,7 @@ describe("PATCH /v1/collections/:collectionId/items/:itemId", () => {
 });
 
 describe("PATCH /v1/collections/:collectionId/items/:itemId/move", () => {
-  it("moves an item to a different list", async () => {
+  it("moves an item to the head of a different list", async () => {
     const targetRes = await request(app)
       .post(`/v1/collections/${collectionId}/lists`)
       .set("Authorization", `token ${token}`)
@@ -152,30 +161,29 @@ describe("PATCH /v1/collections/:collectionId/items/:itemId/move", () => {
     const res = await request(app)
       .patch(`/v1/collections/${collectionId}/items/${itemId}/move`)
       .set("Authorization", `token ${token}`)
-      .send({ listId: targetListId, order: 1 });
+      .send({ listId: targetListId, afterId: null });
 
     expect(res.status).toBe(200);
-    expect(res.body).toMatchObject({ listId: targetListId, order: 1 });
+    expect(res.body).toMatchObject({ listId: targetListId, prevId: null });
   });
 
   it("returns 400 when listId is missing from the move body", async () => {
     const res = await request(app)
       .patch(`/v1/collections/${collectionId}/items/${itemId}/move`)
       .set("Authorization", `token ${token}`)
-      .send({ order: 1 });
+      .send({ afterId: null });
 
     expect(res.status).toBe(400);
   });
 });
 
 describe("DELETE /v1/collections/:collectionId/items/:itemId", () => {
-  it("deletes an item and re-sequences remaining items", async () => {
-    // Create two items and delete the first; the second should shift to order 1
-    const secondListRes = await request(app)
+  it("deletes an item and repairs the linked list", async () => {
+    const seqListRes = await request(app)
       .post(`/v1/collections/${collectionId}/lists`)
       .set("Authorization", `token ${token}`)
       .send({ name: "Sequence Test List" });
-    const seqListId = secondListRes.body.id;
+    const seqListId = seqListRes.body.id;
 
     const first = await request(app)
       .post(`/v1/collections/${collectionId}/items`)
@@ -184,7 +192,7 @@ describe("DELETE /v1/collections/:collectionId/items/:itemId", () => {
     const second = await request(app)
       .post(`/v1/collections/${collectionId}/items`)
       .set("Authorization", `token ${token}`)
-      .send({ name: "Second", description: "", listId: seqListId });
+      .send({ name: "Second", description: "", listId: seqListId, afterId: first.body.id });
 
     const deleteRes = await request(app)
       .delete(`/v1/collections/${collectionId}/items/${first.body.id}`)
@@ -195,7 +203,8 @@ describe("DELETE /v1/collections/:collectionId/items/:itemId", () => {
       .get(`/v1/collections/${collectionId}/items?listId=${seqListId}`)
       .set("Authorization", `token ${token}`);
     expect(itemsRes.body).toHaveLength(1);
-    expect(itemsRes.body[0]).toMatchObject({ id: second.body.id, order: 1 });
+    // Second item is now the head after first was deleted
+    expect(itemsRes.body[0]).toMatchObject({ id: second.body.id, prevId: null });
   });
 
   it("returns 404 for a non-existent item", async () => {

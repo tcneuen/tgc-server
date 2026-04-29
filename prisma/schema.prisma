@@ -52,12 +52,23 @@ model List {
 }
 
 model Item {
-  id          Int    @id @default(autoincrement())
-  name        String
-  description String
-  order       Int
+  id           Int    @id @default(autoincrement())
+  name         String
+  description  String
+  /// Computed from linked-list position within the list's startingRating
+  rating       Float?
   collectionId String
   listId       String
+
+  /// ID of the item that comes immediately before this one in the list (null = head)
+  prevId Int? @unique
+  /// ID of the item that comes immediately after this one in the list (null = tail)
+  nextId Int? @unique
+
+  prev   Item? @relation("LinkedListPrev", fields: [prevId], references: [id], onDelete: SetNull)
+  prevOf Item? @relation("LinkedListPrev")
+  next   Item? @relation("LinkedListNext", fields: [nextId], references: [id], onDelete: SetNull)
+  nextOf Item? @relation("LinkedListNext")
 
   collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   list       List       @relation(fields: [listId], references: [id], onDelete: Cascade)
