@@ -105,16 +105,28 @@ function sortLinkedList<T extends ItemNode>(items: T[]): T[] {
  * If startingRating is null the rating field is set to null.
  */
 async function computeRatingsForList(listId: string): Promise<Map<number, number | null>> {
-  const list = await prisma.list.findUnique({ where: { id: listId } });
+  const list = await prisma.list.findUnique({
+    where: { id: listId },
+    include: { collection: { include: { lists: true } } },
+  });
   const items = await prisma.item.findMany({ where: { listId } });
   const ordered = sortLinkedList(items);
   const ratings = new Map<number, number | null>();
   if (list?.startingRating == null) {
     for (const item of ordered) ratings.set(item.id, null);
   } else {
-    const base = list.startingRating;
-    for (let i = 0; i < ordered.length; i++) {
-      ratings.set(ordered[i].id, base * Math.pow(0.5, i));
+    const floor = list.startingRating;
+    // Find the nearest list with a higher startingRating in the same collection
+    const siblingsAbove = (list.collection?.lists ?? [])
+      .map((l) => l.startingRating)
+      .filter((r): r is number => r != null && r > floor)
+      .sort((a, b) => a - b);
+    const ceiling = siblingsAbove.length > 0 ? siblingsAbove[0] : 10.0;
+    const n = ordered.length;
+    for (let i = 0; i < n; i++) {
+      // Worst item (i = n-1) → floor; best item (i = 0) approaches ceiling
+      const rating = floor + (ceiling - floor) * Math.max(0, n - 1 - i) / n;
+      ratings.set(ordered[i].id, rating);
     }
   }
   return ratings;
