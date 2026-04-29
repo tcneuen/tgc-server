@@ -1,0 +1,25 @@
+### GET users
+GET https://{{host}}:{{$dotenv PORT}}/{{version}}/users HTTP/1.1
+Content-Type: application/json
+Authorization: token {{$dotenv TOKEN}}
+
+
+### GET users/:id
+GET https://{{host}}:{{$dotenv PORT}}/{{version}}/users/1 HTTP/1.1
+Content-Type: application/json
+Authorization: token {{$dotenv TOKEN}}
+
+
+### POST users/
+POST https://{{host}}:{{$dotenv PORT}}/{{version}}/users HTTP/1.1
+Content-Type: application/json
+Authorization: token {{$dotenv TOKEN}}
+
+{
+    "name": "John DoeY",
+    "username": "jdoeY",
+    "password": "jdoeY@prisma.io",
+    "email": "jdoeY@prisma.io"
+
+
+}

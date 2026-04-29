@@ -1,0 +1,17 @@
+{
+  "[javascript][javascriptreact][typescript][typescriptreact][json][jsonc][css][sass]": {
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "rest-client.environmentVariables": {
+    "dev": {
+      "host": "localhost",
+      "version": "v1",
+      "password": "password123"
+    }
+  }
+}
